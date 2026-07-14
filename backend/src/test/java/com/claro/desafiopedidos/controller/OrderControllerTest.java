@@ -5,6 +5,7 @@ import com.claro.desafiopedidos.dto.request.UpdateOrderStatusRequest;
 import com.claro.desafiopedidos.dto.response.OrderResponse;
 import com.claro.desafiopedidos.entity.enums.OrderStatus;
 import com.claro.desafiopedidos.exception.*;
+import com.claro.desafiopedidos.security.JwtAuthenticationFilter;
 import com.claro.desafiopedidos.service.OrderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,9 @@ class OrderControllerTest {
 
     @MockitoBean
     private OrderService orderService;
+
+    @MockitoBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Test
     @DisplayName("GET /api/pedidos deve retornar 200")

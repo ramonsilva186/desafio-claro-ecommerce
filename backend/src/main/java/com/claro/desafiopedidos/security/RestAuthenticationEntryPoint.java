@@ -28,7 +28,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 LocalDateTime.now(),
                 status.value(),
                 status.getReasonPhrase(),
-                "Autenticação necessaria para acessar esta recurso",
+                "Autenticação necessária para acessar este recurso",
                 request.getRequestURI(),
                 null);
 

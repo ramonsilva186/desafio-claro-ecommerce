@@ -57,7 +57,7 @@ info:
 security:
   jwt:
     secret: ${JWT_SECRET}
-    expiration: ${JWT_EXPIRATION}
+    expiration: ${JWT_EXPIRATION:3600000}
     issuer: desafio-pedidos-api
 
 logging:
