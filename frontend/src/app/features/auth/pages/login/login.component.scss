@@ -1,0 +1,33 @@
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: #f5f6fa;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.error-message {
+  margin: 0;
+  color: #b00020;
+  font-size: 0.875rem;
+}
+
+button {
+  min-height: 48px;
+}
+
+mat-spinner {
+  margin: 0 auto;
+}
