@@ -1,7 +1,7 @@
 INSERT INTO users_ecommerce (email, password)
 VALUES (
            'admin@claro.com',
-           '123456'
+           '$2a$10$QCfhCJm.lLygH2QHtPTpmO2T7foQtcpk3k34j7SCVYa9SgBVBcbZG'
        );
 
 INSERT INTO orders (

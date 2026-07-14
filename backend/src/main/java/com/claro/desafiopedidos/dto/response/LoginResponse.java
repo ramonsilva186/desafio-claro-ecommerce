@@ -1,13 +1,12 @@
 package com.claro.desafiopedidos.dto.response;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 
 public record LoginResponse(
         String token,
-        String tokenType
+        String tokenType,
+        long expiration
 ) {
     public LoginResponse(String token) {
-        this(token, "Bearer");
+        this(token, "Bearer", 3600000);
     }
 }

@@ -54,6 +54,12 @@ info:
     description: API REST para gerenciamento de pedidos de e-commerce
     version: 1.0.0
 
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION}
+    issuer: desafio-pedidos-api
+
 logging:
   level:
     root: INFO
