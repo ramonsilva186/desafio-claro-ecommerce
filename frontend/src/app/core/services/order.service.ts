@@ -1,4 +1,4 @@
-﻿import { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environments';
 import { CreateOrderRequest } from '../models/create-order-request';
 import { HealthResponse } from '../models/health-response';
 import { Order } from '../models/order';
+import { OrderStatus } from '../models/order-status';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,14 @@ export class OrderService {
     return this.http.post<Order>(this.ordersUrl, request);
   }
 
+  updateStatus(id: number, status: OrderStatus): Observable<Order> {
+    return this.http.patch<Order>(this.ordersUrl + '/' + id + '/status', { status });
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(this.ordersUrl + '/' + id);
+  }
+
   checkHealth(): Observable<HealthResponse> {
     return this.http.get<HealthResponse>(this.healthUrl);
   }
@@ -42,6 +51,12 @@ export class OrderService {
       localStorage.removeItem(this.fallbackOrdersKey);
       return [];
     }
+  }
+
+  deleteFallbackOrder(id: number): void {
+    const orders = this.getFallbackOrders().filter(order => order.id !== id);
+
+    localStorage.setItem(this.fallbackOrdersKey, JSON.stringify(orders));
   }
 
   saveFallbackOrder(request: CreateOrderRequest): Order {

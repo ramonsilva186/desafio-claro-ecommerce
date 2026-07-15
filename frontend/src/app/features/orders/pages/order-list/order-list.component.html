@@ -1,0 +1,165 @@
+﻿<main class="list-page">
+  <aside class="sidebar" aria-label="Navegacao principal">
+    <div class="sidebar-brand">
+      <span class="brand-mark">Claro</span>
+      <span>Pedidos</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-button" routerLink="/dashboard">
+        <span class="nav-icon">D</span>
+        Dashboard
+      </a>
+
+      <a class="nav-button" routerLink="/pedidos/novo">
+        <span class="nav-icon">+</span>
+        Criar pedido
+      </a>
+
+      <a class="nav-button nav-button--active" routerLink="/pedidos">
+        <span class="nav-icon">L</span>
+        Listagem de pedido
+      </a>
+    </nav>
+  </aside>
+
+  <section class="list-main">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Pedidos</p>
+        <h1>Listagem de pedidos</h1>
+        <p class="subtitle">
+          Consulte pedidos cadastrados.
+        </p>
+      </div>
+
+      <div class="topbar-actions">
+        <span class="limit-pill">{{ orders.length }}/{{ orderLimit }} pedidos</span>
+
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="loadOrders()"
+          [disabled]="isLoading"
+        >
+          Atualizar
+        </button>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          routerLink="/pedidos/novo"
+          [disabled]="!canAddOrder"
+        >
+          Adicionar
+        </button>
+
+        <button mat-flat-button color="primary" type="button" (click)="logout()">
+          Sair
+        </button>
+      </div>
+    </header>
+
+    @if (errorMessage) {
+      <p class="warning-message">{{ errorMessage }}</p>
+    }
+
+    <mat-card class="table-panel">
+      <section class="filters" aria-label="Filtros de pedidos">
+        <mat-form-field appearance="outline">
+          <mat-label>Buscar cliente</mat-label>
+          <input matInput type="text" [(ngModel)]="searchTerm" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="statusFilter">
+            @for (option of statusOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </section>
+
+      @if (isLoading) {
+        <section class="loading-state" aria-live="polite">
+          <mat-spinner diameter="36"></mat-spinner>
+        </section>
+      } @else if (filteredOrders.length === 0) {
+        <section class="empty-state">
+          Nenhum pedido encontrado.
+        </section>
+      } @else {
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Itens</th>
+                <th>Peso</th>
+                <th>Status</th>
+                <th>Acoes</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (order of filteredOrders; track order.id) {
+                <tr>
+                  <td>{{ order.displayName }}</td>
+                  <td>{{ order.items }}</td>
+                  <td>{{ weightInKg(order.weight) }}</td>
+                  <td>
+                    <span class="status-badge" [class]="'status-badge status-' + order.status">
+                      {{ statusLabel(order.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="action-group">
+                      <button
+                        mat-stroked-button
+                        type="button"
+                        (click)="updateStatus(order, 'EM_PROCESSAMENTO')"
+                        [disabled]="!canTransition(order.status, 'EM_PROCESSAMENTO') || actionOrderId === order.id || order.id < 0"
+                      >
+                        Processar
+                      </button>
+
+                      <button
+                        mat-stroked-button
+                        type="button"
+                        (click)="updateStatus(order, 'PAUSADO')"
+                        [disabled]="!canTransition(order.status, 'PAUSADO') || actionOrderId === order.id || order.id < 0"
+                      >
+                        Pausar
+                      </button>
+
+                      <button
+                        mat-stroked-button
+                        type="button"
+                        (click)="updateStatus(order, 'CANCELADO')"
+                        [disabled]="!canTransition(order.status, 'CANCELADO') || actionOrderId === order.id || order.id < 0"
+                      >
+                        Cancelar
+                      </button>
+
+                      <button
+                        mat-flat-button
+                        color="primary"
+                        type="button"
+                        (click)="deleteOrder(order)"
+                        [disabled]="actionOrderId === order.id"
+                      >
+                        Excluir
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </mat-card>
+  </section>
+</main>
