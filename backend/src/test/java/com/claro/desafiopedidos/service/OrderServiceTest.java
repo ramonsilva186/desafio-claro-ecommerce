@@ -59,7 +59,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve retornar lista vazia quando não houver pedidos")
+    @DisplayName("Deve retornar lista vazia quando nÃ£o houver pedidos")
     void shouldReturnEmptyList() {
         // Arrange
         when(orderRepository.findAll()).thenReturn(List.of());
@@ -94,14 +94,14 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao buscar pedido inexistente")
+    @DisplayName("Deve lanÃ§ar exceÃ§Ã£o ao buscar pedido inexistente")
     void shouldThrowWhenOrderDoesNotExist() {
         // Arrange
         when(orderRepository.findById(99L)).thenReturn(Optional.empty());
         // Act + Assert
         assertThatThrownBy(() -> orderService.findById(99L))
                 .isInstanceOf(ResourceNotFoundExecption.class).
-                hasMessage("Pedido com ID 99 não encontrado");
+                hasMessage("Pedido com ID 99 nao encontrado");
 
         verify(orderRepository).findById(99L);
     }
@@ -110,11 +110,20 @@ class OrderServiceTest {
     @DisplayName("Deve criar pedido com status EM_PROCESSAMENTO")
     void shouldCreateOrder() {
         // Arrange
-        CreateOrderRequest request = new CreateOrderRequest("Pedido Ramon Silva", 3, 1500);
+        CreateOrderRequest request = new CreateOrderRequest("Ramon Silva", 3, 1500);
 
         OrderEntity order = new OrderEntity(request.displayName(), request.items(), request.weight());
+        order.setId(4L);
 
-        OrderResponse response = createResponse(4L, OrderStatus.EM_PROCESSAMENTO);
+        OrderResponse response = new OrderResponse(
+                4L,
+                "Pedido #4 - Ramon Silva",
+                3,
+                1500,
+                OrderStatus.EM_PROCESSAMENTO,
+                LocalDateTime.of(2026, 7, 14, 10, 30),
+                LocalDateTime.of(2026, 7, 14, 10, 30)
+        );
 
         when(orderRepository.count()).thenReturn(3L);
         when(orderMapper.toEntity(request)).thenReturn(order);
@@ -128,23 +137,24 @@ class OrderServiceTest {
         assertThat(result).isEqualTo(response);
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.EM_PROCESSAMENTO);
+        assertThat(order.getDisplayName()).isEqualTo("Pedido #4 - Ramon Silva");
 
         verify(orderRepository).count();
         verify(orderRepository).save(order);
     }
 
     @Test
-    @DisplayName("Deve impedir criação do sexto pedido")
+    @DisplayName("Deve impedir criaÃ§Ã£o do sexto pedido")
     void shouldBlockSixthOrder() {
         // Arrange
-        CreateOrderRequest request = new CreateOrderRequest("Pedido Ramon Silva", 3, 1500);
+        CreateOrderRequest request = new CreateOrderRequest("Ramon Silva", 3, 1500);
 
         when(orderRepository.count()).thenReturn(5L);
 
         // Act + Assert
         assertThatThrownBy(() -> orderService.create(request))
                 .isInstanceOf(BusinessExecption.class)
-                .hasMessage("O limite máximo de 5 pedidos foi atingido");
+                .hasMessage("O limite maximo de 5 pedidos foi atingido");
 
         verify(orderRepository).count();
         verify(orderRepository, never()).save(any());
@@ -152,7 +162,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve alterar status quando a transição for válida")
+    @DisplayName("Deve alterar status quando a transiÃ§Ã£o for vÃ¡lida")
     void shouldUpdateStatus() {
         // Arrange
         OrderEntity order = createOrder();
@@ -177,7 +187,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve impedir transição de status inválida")
+    @DisplayName("Deve impedir transiÃ§Ã£o de status invÃ¡lida")
     void shouldBlockInvalidStatusTransition() {
         // Arrange
         OrderEntity order = createOrder();
@@ -191,7 +201,7 @@ class OrderServiceTest {
         assertThatThrownBy(
                 () -> orderService.updateStatus(1L, request))
                 .isInstanceOf(BusinessExecption.class)
-                .hasMessage("Não é permitido alterar o status de CANCELADO para PAUSADO");
+                .hasMessage("Nao e permitido alterar o status de CANCELADO para PAUSADO");
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.CANCELADO);
 
@@ -200,7 +210,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao alterar pedido inexistente")
+    @DisplayName("Deve lanÃ§ar exceÃ§Ã£o ao alterar pedido inexistente")
     void shouldThrowWhenUpdatingMissingOrder() {
         // Arrange
         UpdateOrderStatusRequest request = new UpdateOrderStatusRequest(OrderStatus.PAUSADO);
@@ -211,7 +221,7 @@ class OrderServiceTest {
         assertThatThrownBy(
                 () -> orderService.updateStatus(99L, request))
                 .isInstanceOf(ResourceNotFoundExecption.class)
-                .hasMessage("Pedido com ID 99 não encontrado");
+                .hasMessage("Pedido com ID 99 nao encontrado");
 
         verify(orderRepository).findById(99L);
         verify(orderRepository, never()).save(any());
@@ -234,7 +244,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao excluir pedido inexistente")
+    @DisplayName("Deve lanÃ§ar exceÃ§Ã£o ao excluir pedido inexistente")
     void shouldThrowWhenDeletingMissingOrder() {
         // Arrange
         when(orderRepository.findById(99L)).thenReturn(Optional.empty());
@@ -242,7 +252,7 @@ class OrderServiceTest {
         // Act + Assert
         assertThatThrownBy(() -> orderService.delete(99L))
                 .isInstanceOf(ResourceNotFoundExecption.class)
-                .hasMessage("Pedido com ID 99 não encontrado");
+                .hasMessage("Pedido com ID 99 nao encontrado");
 
         verify(orderRepository).findById(99L);
         verify(orderRepository, never()).delete(any());

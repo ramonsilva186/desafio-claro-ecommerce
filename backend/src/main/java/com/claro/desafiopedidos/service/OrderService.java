@@ -46,6 +46,7 @@ public class OrderService {
 
         OrderEntity order = orderMapper.toEntity(request);
         OrderEntity savedOrder = orderRepository.save(order);
+        formatDisplayNameWithOrderId(savedOrder);
 
         log.info(
                 "Pedido criado com sucesso: orderId={}, displayName={}, items={}, weight={}, status={}",
@@ -66,12 +67,12 @@ public class OrderService {
 
         if (!currentStatus.canTransitionTo(nextStatus)) {
             log.warn(
-                    "Tentativa de transição inválida: orderId={}, currentStatus={}, nextStatus={}",
+                    "Tentativa de transicao invalida: orderId={}, currentStatus={}, nextStatus={}",
                     id,
                     currentStatus,
                     nextStatus
             );
-            throw new BusinessExecption("Não é permitido alterar o status de %s para %s".formatted(currentStatus, nextStatus));
+            throw new BusinessExecption("Nao e permitido alterar o status de %s para %s".formatted(currentStatus, nextStatus));
         }
 
         order.setStatus(nextStatus);
@@ -94,11 +95,19 @@ public class OrderService {
         orderRepository.delete(order);
 
         log.info(
-                "Pedido excluído com sucesso: orderId={}, displayName={}, status={}",
+                "Pedido excluido com sucesso: orderId={}, displayName={}, status={}",
                 order.getId(),
                 order.getDisplayName(),
                 order.getStatus()
         );
+    }
+
+    private void formatDisplayNameWithOrderId(OrderEntity order) {
+        if (order.getId() == null || order.getDisplayName().startsWith("Pedido #")) {
+            return;
+        }
+
+        order.setDisplayName("Pedido #%d - %s".formatted(order.getId(), order.getDisplayName().trim()));
     }
 
     private void validateOrderLimit() {
@@ -110,15 +119,15 @@ public class OrderService {
                     MAX_ORDERS
             );
 
-            throw new BusinessExecption("O limite máximo de %d pedidos foi atingido".formatted(MAX_ORDERS));
+            throw new BusinessExecption("O limite maximo de %d pedidos foi atingido".formatted(MAX_ORDERS));
         }
     }
 
     private OrderEntity findEntityById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Pedido não encontrado: orderId={}", id);
-                    return new ResourceNotFoundExecption("Pedido com ID %d não encontrado".formatted(id));
+                    log.warn("Pedido nao encontrado: orderId={}", id);
+                    return new ResourceNotFoundExecption("Pedido com ID %d nao encontrado".formatted(id));
                 });
     }
 
