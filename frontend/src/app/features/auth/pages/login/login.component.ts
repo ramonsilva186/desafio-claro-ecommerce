@@ -71,7 +71,7 @@ export class LoginComponent {
           const apiError = error.error as ApiError;
 
           this.errorMessage =
-            apiError?.message ?? 'Não foi possível realizar o login.';
+            apiError?.message ?? 'Nao foi possivel realizar o login.';
         }
       });
   }

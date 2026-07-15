@@ -1,4 +1,40 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --claro-red: #d71920;
+  --claro-red-dark: #a80f16;
+  --claro-red-soft: #fff0f1;
+  --ink: #20242a;
+  --muted: #667085;
+  --page: #f7f5f3;
+  --surface: #ffffff;
+  --line: #e6e2dd;
+  --success: #14795a;
+  --warning: #b7791f;
+  --danger: #c62828;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-mdc-unelevated-button.mat-primary {
+  --mdc-filled-button-container-color: var(--claro-red);
+  --mdc-filled-button-label-text-color: #ffffff;
+}
+
+.mat-mdc-unelevated-button.mat-primary:hover {
+  --mdc-filled-button-container-color: var(--claro-red-dark);
+}
+
+.mat-mdc-outlined-button.mat-primary,
+.mat-mdc-outlined-button:not(:disabled) {
+  --mdc-outlined-button-label-text-color: var(--ink);
+  --mdc-outlined-button-outline-color: var(--line);
+}

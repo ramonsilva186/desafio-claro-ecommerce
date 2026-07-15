@@ -47,8 +47,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadDashboard();
-    this.loadHealth();
+    this.refreshDashboard();
   }
 
   get totalOrders(): number {
@@ -90,7 +89,7 @@ export class DashboardComponent implements OnInit {
 
   get pieChartStyle(): Record<string, string> {
     return {
-      background: `conic-gradient(#d71920 0 ${this.usagePercent}%, #e8edf3 ${this.usagePercent}% 100%)`
+      background: `conic-gradient(var(--claro-red) 0 ${this.usagePercent}%, #f0ece8 ${this.usagePercent}% 100%)`
     };
   }
 
@@ -100,21 +99,26 @@ export class DashboardComponent implements OnInit {
         status: 'EM_PROCESSAMENTO',
         label: 'Em processamento',
         total: this.processingOrders,
-        color: '#1f8a5b'
+        color: 'var(--success)'
       },
       {
         status: 'PAUSADO',
         label: 'Pausados',
         total: this.pausedOrders,
-        color: '#d89a00'
+        color: 'var(--warning)'
       },
       {
         status: 'CANCELADO',
         label: 'Cancelados',
         total: this.canceledOrders,
-        color: '#c62828'
+        color: 'var(--danger)'
       }
     ];
+  }
+
+  refreshDashboard(): void {
+    this.loadDashboard();
+    this.loadHealth();
   }
 
   loadDashboard(): void {
@@ -135,6 +139,7 @@ export class DashboardComponent implements OnInit {
             return;
           }
 
+          this.orders = [];
           this.errorMessage =
             'Nao foi possivel carregar os indicadores de pedidos.';
         }
