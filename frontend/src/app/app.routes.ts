@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+﻿import { Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
@@ -17,6 +17,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/dashboard/pages/dashboard/dashboard.component')
         .then((m) => m.DashboardComponent)
+  },
+  {
+    path: 'pedidos/novo',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/orders/pages/create-order/create-order.component')
+        .then((m) => m.CreateOrderComponent)
   },
   {
     path: '',
