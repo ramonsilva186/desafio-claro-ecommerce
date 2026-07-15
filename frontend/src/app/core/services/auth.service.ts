@@ -13,6 +13,7 @@ export class AuthService {
 
   private readonly apiUrl = `${environment.apiUrl}/auth`;
   private readonly tokenKey = 'access_token';
+  private readonly lastAuthenticatedRouteKey = 'last_authenticated_route';
 
   constructor(private readonly http: HttpClient) {}
 
@@ -26,6 +27,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.lastAuthenticatedRouteKey);
   }
 
   getToken(): string | null {
@@ -34,6 +36,16 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  saveLastAuthenticatedRoute(url: string): void {
+    if (url && url !== '/login') {
+      localStorage.setItem(this.lastAuthenticatedRouteKey, url);
+    }
+  }
+
+  getLastAuthenticatedRoute(): string {
+    return localStorage.getItem(this.lastAuthenticatedRouteKey) ?? '/dashboard';
   }
 
   private storeToken(token: string): void {
