@@ -1,0 +1,120 @@
+<main class="dashboard-page">
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Dashboard</p>
+      <h1>Gestao de pedidos</h1>
+      <p class="subtitle">
+        Acompanhe os pedidos cadastrados.
+      </p>
+    </div>
+
+    <div class="topbar-actions">
+      <span
+        class="api-status"
+        [class.api-status--down]="apiStatus !== 'UP'"
+      >
+        API {{ apiStatus }}
+      </span>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="loadDashboard()"
+        [disabled]="isLoading"
+      >
+        Atualizar
+      </button>
+
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        (click)="logout()"
+      >
+        Sair
+      </button>
+    </div>
+  </header>
+
+  @if (isLoading) {
+    <section class="loading-state" aria-live="polite">
+      <mat-spinner diameter="36"></mat-spinner>
+    </section>
+  } @else {
+    @if (errorMessage) {
+      <p class="error-message">{{ errorMessage }}</p>
+    }
+
+    <section class="summary-grid" aria-label="Resumo dos pedidos">
+      <mat-card class="summary-card">
+        <span>Total de pedidos</span>
+        <strong>{{ totalOrders }}</strong>
+      </mat-card>
+
+      <mat-card class="summary-card">
+        <span>Em processamento</span>
+        <strong>{{ processingOrders }}</strong>
+      </mat-card>
+
+      <mat-card class="summary-card">
+        <span>Peso total</span>
+        <strong>{{ totalWeightInKg }} kg</strong>
+      </mat-card>
+
+      <mat-card class="summary-card">
+        <span>Itens totais</span>
+        <strong>{{ totalItems }}</strong>
+      </mat-card>
+    </section>
+
+    <section class="charts-grid">
+      <mat-card class="chart-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Pedidos por status</h2>
+          </div>
+        </div>
+
+        <div class="bar-chart" aria-label="Grafico de barras por status">
+          @for (summary of statusSummaries; track summary.status) {
+            <div class="bar-item">
+              <div class="bar-track">
+                <span
+                  class="bar-fill"
+                  [style.height]="barHeight(summary.total)"
+                  [style.background]="summary.color"
+                ></span>
+              </div>
+              <strong>{{ summary.total }}</strong>
+              <span>{{ summary.label }}</span>
+            </div>
+          }
+        </div>
+      </mat-card>
+
+      <mat-card class="chart-panel limit-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Limite de pedidos</h2>
+          </div>
+        </div>
+
+        <div class="limit-content">
+          <div
+            class="pie-chart"
+            [ngStyle]="pieChartStyle"
+            role="img"
+            aria-label="Grafico de pizza de pedidos contra limite"
+          >
+            <span>{{ totalOrders }}/{{ orderLimit }}</span>
+          </div>
+
+          <div class="limit-copy">
+            <strong>{{ usagePercent | number: '1.0-0' }}%</strong>
+            <span>do limite utilizado</span>
+          </div>
+        </div>
+      </mat-card>
+    </section>
+  }
+</main>
