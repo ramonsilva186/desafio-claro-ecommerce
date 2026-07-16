@@ -15,6 +15,7 @@ Aplicacao full stack para gestao de pedidos de e-commerce, desenvolvida com back
 - Angular Material
 - Docker Compose
 - Grafana
+- JaCoCo
 
 ## Funcionalidades
 
@@ -82,19 +83,9 @@ docker compose down -v
 | --- | --- |
 | Frontend | http://localhost:4200 |
 | Backend | http://localhost:8080 |
-| H2 Console | http://localhost:8080/h2-console |
 | Prometheus | http://localhost:9090 |
 | Grafana | http://localhost:3000 |
 
-## H2 Console
-
-Dados de conexao:
-
-```text
-JDBC URL: jdbc:h2:mem:desafiopedidos
-User: sa
-Password: deixe em branco
-```
 
 ## Endpoints principais
 
@@ -302,6 +293,12 @@ cd backend
 .\mvnw test
 ```
 
+O projeto usa JaCoCo para gerar relatorio de cobertura dos testes do backend. Depois de executar os testes, o relatorio HTML fica em:
+
+```text
+backend/target/site/jacoco/index.html
+```
+
 ### Frontend
 
 ```bash
@@ -318,7 +315,8 @@ npm run build
 
 ## Observacoes
 
-- O banco H2 e em memoria, entao os dados sao recriados ao reiniciar o backend.
+- O banco H2 e em memoria e usado apenas pela aplicacao; o console web nao e exposto como URL publica no README por seguranca.
+- Os dados sao recriados ao reiniciar o backend.
 - O backend inicia com usuario e pedidos definidos em `backend/src/main/resources/data.sql`.
 - O token JWT e armazenado no navegador para autenticar chamadas protegidas.
 - Logs estruturados podem ser acompanhados com `docker compose logs -f backend`.
