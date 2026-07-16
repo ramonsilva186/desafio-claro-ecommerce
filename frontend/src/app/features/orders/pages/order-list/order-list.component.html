@@ -1,4 +1,4 @@
-﻿<main class="list-page">
+<main class="list-page">
   <aside class="sidebar" aria-label="Navegacao principal">
     <div class="sidebar-brand">
       <span class="brand-mark">Claro</span>
@@ -99,7 +99,7 @@
                 <th>Itens</th>
                 <th>Peso</th>
                 <th>Status</th>
-                <th>Acoes</th>
+                <th>Açoes</th>
               </tr>
             </thead>
 
@@ -120,7 +120,7 @@
                         mat-stroked-button
                         type="button"
                         (click)="updateStatus(order, 'EM_PROCESSAMENTO')"
-                        [disabled]="!canTransition(order.status, 'EM_PROCESSAMENTO') || actionOrderId === order.id || order.id < 0"
+                        [disabled]="!canTransition(order.status, 'EM_PROCESSAMENTO') || actionOrderId === order.id"
                       >
                         Processar
                       </button>
@@ -129,7 +129,7 @@
                         mat-stroked-button
                         type="button"
                         (click)="updateStatus(order, 'PAUSADO')"
-                        [disabled]="!canTransition(order.status, 'PAUSADO') || actionOrderId === order.id || order.id < 0"
+                        [disabled]="!canTransition(order.status, 'PAUSADO') || actionOrderId === order.id"
                       >
                         Pausar
                       </button>
@@ -138,7 +138,7 @@
                         mat-stroked-button
                         type="button"
                         (click)="updateStatus(order, 'CANCELADO')"
-                        [disabled]="!canTransition(order.status, 'CANCELADO') || actionOrderId === order.id || order.id < 0"
+                        [disabled]="!canTransition(order.status, 'CANCELADO') || actionOrderId === order.id"
                       >
                         Cancelar
                       </button>

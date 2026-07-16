@@ -80,7 +80,7 @@ export class OrderListComponent implements OnInit {
   }
 
   get canAddOrder(): boolean {
-    return this.orders.length < this.orderLimit;
+    return this.orders.length < this.orderLimit && !this.apiUnavailable;
   }
 
   loadOrders(): void {
@@ -92,7 +92,7 @@ export class OrderListComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: orders => {
-          this.orders = [...orders, ...this.orderService.getFallbackOrders()];
+          this.orders = orders;
           this.apiUnavailable = false;
         },
         error: (error: HttpErrorResponse) => {
@@ -102,15 +102,15 @@ export class OrderListComponent implements OnInit {
             return;
           }
 
-          this.orders = this.orderService.getFallbackOrders();
+          this.orders = [];
           this.apiUnavailable = true;
-          this.errorMessage = 'API indisponivel. Exibindo apenas pedidos locais.';
+          this.errorMessage = 'API indisponivel. Nao foi possivel carregar os pedidos.';
         }
       });
   }
 
   updateStatus(order: Order, status: OrderStatus): void {
-    if (!this.canTransition(order.status, status) || order.id < 0) {
+    if (!this.canTransition(order.status, status) || this.apiUnavailable) {
       return;
     }
 
@@ -137,14 +137,7 @@ export class OrderListComponent implements OnInit {
       `Deseja excluir o pedido "${order.displayName}"?`
     );
 
-    if (!confirmed) {
-      return;
-    }
-
-    if (order.id < 0) {
-      this.orderService.deleteFallbackOrder(order.id);
-      this.orders = this.orders.filter(currentOrder => currentOrder.id !== order.id);
-      this.snackBar.open('Pedido local removido.', 'OK', { duration: 3000 });
+    if (!confirmed || this.apiUnavailable) {
       return;
     }
 
@@ -196,6 +189,12 @@ export class OrderListComponent implements OnInit {
       this.authService.logout();
       this.router.navigate(['/login']);
       return;
+    }
+
+    if (error.status === 0) {
+      this.orders = [];
+      this.apiUnavailable = true;
+      this.errorMessage = 'API indisponivel. Nao foi possivel carregar os pedidos.';
     }
 
     this.snackBar.open(

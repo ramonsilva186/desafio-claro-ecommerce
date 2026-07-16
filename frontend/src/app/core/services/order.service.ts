@@ -12,7 +12,6 @@ import { OrderStatus } from '../models/order-status';
   providedIn: 'root'
 })
 export class OrderService {
-  private readonly fallbackOrdersKey = 'fallback_orders';
   private readonly ordersUrl = `${environment.apiUrl}/pedidos`;
   private readonly healthUrl = `${environment.actuatorUrl}/health`;
 
@@ -36,44 +35,5 @@ export class OrderService {
 
   checkHealth(): Observable<HealthResponse> {
     return this.http.get<HealthResponse>(this.healthUrl);
-  }
-
-  getFallbackOrders(): Order[] {
-    const storedOrders = localStorage.getItem(this.fallbackOrdersKey);
-
-    if (!storedOrders) {
-      return [];
-    }
-
-    try {
-      return JSON.parse(storedOrders) as Order[];
-    } catch {
-      localStorage.removeItem(this.fallbackOrdersKey);
-      return [];
-    }
-  }
-
-  deleteFallbackOrder(id: number): void {
-    const orders = this.getFallbackOrders().filter(order => order.id !== id);
-
-    localStorage.setItem(this.fallbackOrdersKey, JSON.stringify(orders));
-  }
-
-  saveFallbackOrder(request: CreateOrderRequest): Order {
-    const now = new Date().toISOString();
-    const order: Order = {
-      id: -Date.now(),
-      displayName: request.displayName,
-      items: request.items,
-      weight: request.weight,
-      status: 'EM_PROCESSAMENTO',
-      createdAt: now,
-      updatedAt: now
-    };
-    const orders = [...this.getFallbackOrders(), order];
-
-    localStorage.setItem(this.fallbackOrdersKey, JSON.stringify(orders));
-
-    return order;
   }
 }

@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -59,12 +59,8 @@ export class CreateOrderComponent implements OnInit {
     this.loadOrderLimit();
   }
 
-  get fallbackOrderCount(): number {
-    return this.orderService.getFallbackOrders().length;
-  }
-
   get totalOrders(): number {
-    return this.apiOrderCount + this.fallbackOrderCount;
+    return this.apiOrderCount;
   }
 
   get isLimitReached(): boolean {
@@ -88,7 +84,7 @@ export class CreateOrderComponent implements OnInit {
   }
 
   submit(): void {
-    if (this.orderForm.invalid || this.isSubmitting || this.isLimitReached) {
+    if (this.orderForm.invalid || this.isSubmitting || this.isLimitReached || this.apiUnavailable) {
       this.orderForm.markAllAsTouched();
       return;
     }
@@ -109,6 +105,7 @@ export class CreateOrderComponent implements OnInit {
       .subscribe({
         next: () => {
           this.apiOrderCount += 1;
+          this.apiUnavailable = false;
           this.orderForm.reset();
           this.snackBar.open('Pedido cadastrado com sucesso.', 'OK', {
             duration: 3000
@@ -122,14 +119,9 @@ export class CreateOrderComponent implements OnInit {
           }
 
           if (error.status === 0) {
-            this.orderService.saveFallbackOrder(request);
-            this.orderForm.reset();
             this.apiUnavailable = true;
-            this.snackBar.open(
-              'API indisponivel. Pedido salvo localmente.',
-              'OK',
-              { duration: 4000 }
-            );
+            this.errorMessage = 'API indisponivel. Nao foi possivel cadastrar o pedido.';
+            this.snackBar.open(this.errorMessage, 'OK', { duration: 4000 });
             return;
           }
 
@@ -154,6 +146,7 @@ export class CreateOrderComponent implements OnInit {
         next: orders => {
           this.apiOrderCount = orders.length;
           this.apiUnavailable = false;
+          this.errorMessage = '';
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 401 || error.status === 403) {
@@ -164,6 +157,7 @@ export class CreateOrderComponent implements OnInit {
 
           this.apiOrderCount = 0;
           this.apiUnavailable = true;
+          this.errorMessage = 'API indisponivel. Nao foi possivel consultar o limite de pedidos.';
         }
       });
   }

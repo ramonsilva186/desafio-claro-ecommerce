@@ -59,11 +59,6 @@
             <mat-spinner diameter="32"></mat-spinner>
           </section>
         } @else {
-          @if (apiUnavailable) {
-            <p class="warning-message">
-              API indisponivel. O pedido sera salvo localmente.
-            </p>
-          }
 
           @if (isLimitReached) {
             <p class="error-message">
@@ -137,7 +132,7 @@
               mat-flat-button
               color="primary"
               type="submit"
-              [disabled]="orderForm.invalid || isSubmitting || isLimitReached"
+              [disabled]="orderForm.invalid || isSubmitting || isLimitReached || apiUnavailable"
             >
               @if (isSubmitting) {
                 <mat-spinner diameter="22"></mat-spinner>
