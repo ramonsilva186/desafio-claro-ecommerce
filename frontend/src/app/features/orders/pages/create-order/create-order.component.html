@@ -1,9 +1,8 @@
 <main class="order-page">
   <aside class="sidebar" aria-label="Navegacao principal">
-    <div class="sidebar-brand">
-      <span class="brand-mark">Claro</span>
-      <span>Pedidos</span>
-    </div>
+    <a class="sidebar-brand" routerLink="/dashboard" aria-label="Ir para o dashboard">
+      <img src="assets/claro.png" alt="Claro" class="brand-logo" />
+    </a>
 
     <nav class="sidebar-nav">
       <a class="nav-button" routerLink="/dashboard">
@@ -18,7 +17,7 @@
 
       <a class="nav-button" routerLink="/pedidos">
         <span class="material-icons nav-icon" aria-hidden="true">assignment</span>
-        Listagem de pedido
+        Meus Pedidos
       </a>
     </nav>
   </aside>

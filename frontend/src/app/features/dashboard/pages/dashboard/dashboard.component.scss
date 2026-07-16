@@ -2,7 +2,7 @@
     min-height: 100vh;
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr);
-    background: linear-gradient(135deg, rgba(215, 25, 32, .08), transparent 34%), radial-gradient(circle at 88% 8%, rgba(32, 36, 42, .08), transparent 30%), var(--page);
+    background: var(--app-background);
     color: var(--ink)
 }
 
@@ -11,29 +11,25 @@
     top: 0;
     min-height: 100vh;
     padding: 1.25rem;
-    background: rgba(255, 255, 255, .84);
-    border-right: 1px solid var(--line)
+    background: var(--app-background);
+    border-right: 1px solid rgba(215, 25, 32, .12)
 }
 
 .sidebar-brand {
     display: flex;
     align-items: center;
-    gap: .65rem;
-    margin-bottom: 1.5rem;
-    font-weight: 800
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 1rem;
+    text-decoration: none
 }
 
-.brand-mark {
-    display: inline-grid;
-    place-items: center;
-    min-width: 68px;
-    height: 34px;
-    border-radius: 999px;
-    background: var(--claro-red);
-    color: #fff;
-    font-weight: 900
+.brand-logo {
+    display: block;
+    width: 108px;
+    height: auto;
+    object-fit: contain
 }
-
 .sidebar-nav {
     display: grid;
     gap: .5rem
@@ -55,10 +51,16 @@
     cursor: pointer
 }
 
-.nav-button:hover,
-.nav-button--active {
-    background: var(--claro-red-soft);
+.nav-button:hover {
+    background: rgba(255, 255, 255, .72);
     color: var(--ink)
+}
+
+.nav-button--active {
+    background: #fff;
+    color: var(--ink);
+    border-left: 4px solid var(--claro-red);
+    box-shadow: 0 10px 24px rgba(32, 36, 42, .08)
 }
 
 .nav-icon {
@@ -70,6 +72,11 @@
     background: #fff;
     color: var(--claro-red);
     font-size: 1.1rem
+}
+
+.nav-button--active .nav-icon {
+    background: var(--claro-red);
+    color: #fff
 }
 
 .dashboard-main {
@@ -142,7 +149,6 @@ h1 {
 }
 
 .api-status {
-    min-width: 88px;
     padding: .45rem .7rem;
     border-radius: 999px;
     background: #e3f4eb;
@@ -180,7 +186,8 @@ h1 {
     background: rgba(255, 255, 255, .9)
 }
 
-.summary-card {
+.summary-card,
+.chart-panel {
     border-top: 3px solid var(--claro-red)
 }
 
@@ -188,7 +195,6 @@ h1 {
     display: block;
     margin-top: .35rem;
     font-size: 2rem;
-    line-height: 1
 }
 
 .panel-heading {
@@ -215,7 +221,7 @@ h1 {
     position: relative;
     overflow: hidden;
     border-radius: 8px;
-    background: linear-gradient(180deg, #f7f3ef, #ece6df)
+    background: #f0ece8
 }
 
 .bar-fill {
@@ -275,6 +281,7 @@ h1 {
     margin-bottom: 1rem;
     padding: .85rem 1rem;
     border-radius: 8px;
+    border: 1px solid rgba(215, 25, 32, .16);
     background: var(--claro-red-soft);
     color: var(--claro-red-dark)
 }

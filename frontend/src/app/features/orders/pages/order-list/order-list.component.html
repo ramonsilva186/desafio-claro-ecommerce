@@ -1,9 +1,8 @@
 <main class="list-page">
   <aside class="sidebar" aria-label="Navegacao principal">
-    <div class="sidebar-brand">
-      <span class="brand-mark">Claro</span>
-      <span>Pedidos</span>
-    </div>
+    <a class="sidebar-brand" routerLink="/dashboard" aria-label="Ir para o dashboard">
+      <img src="assets/claro.png" alt="Claro" class="brand-logo" />
+    </a>
 
     <nav class="sidebar-nav">
       <a class="nav-button" routerLink="/dashboard">
@@ -18,7 +17,7 @@
 
       <a class="nav-button nav-button--active" routerLink="/pedidos">
         <span class="material-icons nav-icon" aria-hidden="true">assignment</span>
-        Listagem de pedido
+        Meus Pedidos
       </a>
     </nav>
   </aside>
@@ -27,7 +26,7 @@
     <header class="topbar">
       <div>
         <p class="eyebrow">Pedidos</p>
-        <h1>Listagem de pedidos</h1>
+        <h1>Meus Pedidos</h1>
         <p class="subtitle">
           Consulte pedidos cadastrados.
         </p>
@@ -62,7 +61,7 @@
     </header>
 
     @if (errorMessage) {
-      <p class="warning-message">{{ errorMessage }}</p>
+      <p class="error-message">{{ errorMessage }}</p>
     }
 
     <mat-card class="table-panel">
