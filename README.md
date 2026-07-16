@@ -226,6 +226,12 @@ O datasource do Prometheus ja e provisionado automaticamente em:
 monitoring/grafana/provisioning/datasources/prometheus.yml
 ```
 
+Os dashboards tambem sao provisionados automaticamente a partir de:
+
+```text
+monitoring/grafana/provisioning/dashboards
+```
+
 Datasource:
 
 ```text
