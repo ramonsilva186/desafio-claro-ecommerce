@@ -94,6 +94,20 @@ class SecurityIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("UP"));
     }
+    @Test
+    @DisplayName("Metrics deve continuar público")
+    void shouldAllowPublicMetricsEndpoint() throws Exception {
+        mockMvc.perform(get("/actuator/metrics"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.names").isArray());
+    }
+
+    @Test
+    @DisplayName("Info deve continuar público")
+    void shouldAllowPublicInfoEndpoint() throws Exception {
+        mockMvc.perform(get("/actuator/info"))
+                .andExpect(status().isOk());
+    }
 
     @Test
     @DisplayName("Deve permitir preflight CORS do frontend")

@@ -51,6 +51,7 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/h2-console/**",
                                 "/actuator/health",
+                                "/actuator/metrics",
                                 "/actuator/info"
                         ).permitAll()
                         .requestMatchers("/api/pedidos/**")
