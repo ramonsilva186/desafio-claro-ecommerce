@@ -65,7 +65,7 @@ export class LoginComponent {
       )
       .subscribe({
         next: () => {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard'], { state: { showWelcome: true } });
         },
         error: error => {
           const apiError = error.error as ApiError;

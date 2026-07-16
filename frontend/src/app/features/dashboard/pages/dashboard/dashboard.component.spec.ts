@@ -88,6 +88,14 @@ describe('DashboardComponent', () => {
     expect(component.apiStatus).toBe('UP');
   });
 
+
+  it('should close welcome modal', () => {
+    component.showWelcomeModal = true;
+
+    component.closeWelcomeModal();
+
+    expect(component.showWelcomeModal).toBeFalse();
+  });
   it('should calculate dashboard totals', () => {
     component.orders = ordersMock;
 

@@ -40,3 +40,46 @@ body {
   --mdc-outlined-button-label-text-color: var(--ink);
   --mdc-outlined-button-outline-color: var(--line);
 }
+.welcome-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(32, 36, 42, 0.42);
+}
+
+.welcome-dialog {
+  width: min(440px, 100%);
+  padding: 1.4rem;
+  border: 1px solid rgba(215, 25, 32, 0.16);
+  border-top: 4px solid var(--claro-red);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(32, 36, 42, 0.24);
+}
+
+.welcome-dialog h2,
+.welcome-dialog p {
+  margin: 0;
+}
+
+.welcome-dialog h2 {
+  margin-bottom: 0.55rem;
+  color: var(--ink);
+}
+
+.welcome-dialog p:not(.welcome-eyebrow) {
+  margin-bottom: 1.15rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.welcome-eyebrow {
+  margin-bottom: 0.35rem;
+  color: var(--claro-red);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}

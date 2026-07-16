@@ -40,6 +40,7 @@ export class DashboardComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   apiStatus = 'VERIFICANDO';
+  showWelcomeModal = false;
 
   constructor(
     private readonly orderService: OrderService,
@@ -48,6 +49,12 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.showWelcomeModal = history.state?.showWelcome === true;
+
+    if (this.showWelcomeModal) {
+      history.replaceState({ ...history.state, showWelcome: false }, '');
+    }
+
     this.refreshDashboard();
   }
 
@@ -145,6 +152,10 @@ export class DashboardComponent implements OnInit {
             'Nao foi possivel carregar os indicadores de pedidos.';
         }
       });
+  }
+
+  closeWelcomeModal(): void {
+    this.showWelcomeModal = false;
   }
 
   logout(): void {

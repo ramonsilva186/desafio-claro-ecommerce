@@ -60,7 +60,7 @@ describe('LoginComponent', () => {
       email: 'admin@claro.com',
       password: '123456'
     });
-    expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+    expect(router.navigate).toHaveBeenCalledWith(['/dashboard'], { state: { showWelcome: true } });
     expect(component.isLoading).toBeFalse();
   });
 
