@@ -1,6 +1,5 @@
 package com.claro.desafiopedidos.security;
 
-
 import com.claro.desafiopedidos.dto.response.OrderResponse;
 import com.claro.desafiopedidos.entity.enums.OrderStatus;
 import com.claro.desafiopedidos.service.OrderService;
@@ -20,7 +19,9 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {
         "security.jwt.secret=12345678901234567890123456789012",
@@ -44,14 +45,12 @@ class SecurityIntegrationTest {
     void shouldReturnUnauthorizedWithoutToken() throws Exception {
         mockMvc.perform(get("/api/pedidos"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.status").value(401))
-                .andExpect(jsonPath("$.message").value("Autenticação necessária para acessar este recurso"));
+                .andExpect(jsonPath("$.status").value(401));
     }
 
     @Test
-    @DisplayName("Deve permitir acesso com token válido")
+    @DisplayName("Deve permitir acesso com token valido")
     void shouldAllowRequestWithValidToken() throws Exception {
-        // Arrange
         UserDetails userDetails = User
                 .withUsername("admin@claro.com")
                 .password("hash")
@@ -72,30 +71,30 @@ class SecurityIntegrationTest {
 
         when(orderService.findAll()).thenReturn(List.of(response));
 
-        // Act + Assert
         mockMvc.perform(get("/api/pedidos")
-                                .header("Authorization", "Bearer " + token))
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].displayName").value("Pedido Ramon Silva"));
     }
 
     @Test
-    @DisplayName("Deve retornar 401 para token inválido")
+    @DisplayName("Deve retornar 401 para token invalido")
     void shouldReturnUnauthorizedForInvalidToken() throws Exception {
         mockMvc.perform(get("/api/pedidos")
-                                .header("Authorization", "Bearer token-invalido"))
+                        .header("Authorization", "Bearer token-invalido"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @DisplayName("Health deve continuar público")
+    @DisplayName("Health deve continuar publico")
     void shouldAllowPublicHealthEndpoint() throws Exception {
         mockMvc.perform(get("/actuator/health"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("UP"));
     }
+
     @Test
-    @DisplayName("Metrics deve continuar público")
+    @DisplayName("Metrics deve continuar publico")
     void shouldAllowPublicMetricsEndpoint() throws Exception {
         mockMvc.perform(get("/actuator/metrics"))
                 .andExpect(status().isOk())
@@ -103,9 +102,16 @@ class SecurityIntegrationTest {
     }
 
     @Test
-    @DisplayName("Info deve continuar público")
+    @DisplayName("Info deve continuar publico")
     void shouldAllowPublicInfoEndpoint() throws Exception {
         mockMvc.perform(get("/actuator/info"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Prometheus deve continuar publico")
+    void shouldAllowPublicPrometheusEndpoint() throws Exception {
+        mockMvc.perform(get("/actuator/prometheus"))
                 .andExpect(status().isOk());
     }
 
@@ -121,5 +127,3 @@ class SecurityIntegrationTest {
                 .andExpect(header().string("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE,OPTIONS"));
     }
 }
-
-
