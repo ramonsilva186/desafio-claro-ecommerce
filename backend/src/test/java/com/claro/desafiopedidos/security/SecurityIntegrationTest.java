@@ -64,6 +64,7 @@ class SecurityIntegrationTest {
                 "Pedido Ramon Silva",
                 3,
                 1500,
+                4500,
                 OrderStatus.EM_PROCESSAMENTO,
                 LocalDateTime.now(),
                 LocalDateTime.now()

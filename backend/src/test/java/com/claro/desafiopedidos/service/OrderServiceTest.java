@@ -59,7 +59,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve retornar lista vazia quando não houver pedidos")
+    @DisplayName("Deve retornar lista vazia quando nÃƒÂ£o houver pedidos")
     void shouldReturnEmptyList() {
         // Arrange
         when(orderRepository.findAll()).thenReturn(List.of());
@@ -94,7 +94,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao buscar pedido inexistente")
+    @DisplayName("Deve lanÃƒÂ§ar exceÃƒÂ§ÃƒÂ£o ao buscar pedido inexistente")
     void shouldThrowWhenOrderDoesNotExist() {
         // Arrange
         when(orderRepository.findById(99L)).thenReturn(Optional.empty());
@@ -120,6 +120,7 @@ class OrderServiceTest {
                 "Pedido #4 - Ramon Silva",
                 3,
                 1500,
+                4500,
                 OrderStatus.EM_PROCESSAMENTO,
                 LocalDateTime.of(2026, 7, 14, 10, 30),
                 LocalDateTime.of(2026, 7, 14, 10, 30)
@@ -144,7 +145,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve impedir criação do sexto pedido")
+    @DisplayName("Deve impedir criaÃƒÂ§ÃƒÂ£o do sexto pedido")
     void shouldBlockSixthOrder() {
         // Arrange
         CreateOrderRequest request = new CreateOrderRequest("Ramon Silva", 3, 1500);
@@ -162,7 +163,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve alterar status quando a transição for válida")
+    @DisplayName("Deve alterar status quando a transiÃƒÂ§ÃƒÂ£o for vÃƒÂ¡lida")
     void shouldUpdateStatus() {
         // Arrange
         OrderEntity order = createOrder();
@@ -187,7 +188,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve impedir transição de status inválida")
+    @DisplayName("Deve impedir transiÃƒÂ§ÃƒÂ£o de status invÃƒÂ¡lida")
     void shouldBlockInvalidStatusTransition() {
         // Arrange
         OrderEntity order = createOrder();
@@ -210,7 +211,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao alterar pedido inexistente")
+    @DisplayName("Deve lanÃƒÂ§ar exceÃƒÂ§ÃƒÂ£o ao alterar pedido inexistente")
     void shouldThrowWhenUpdatingMissingOrder() {
         // Arrange
         UpdateOrderStatusRequest request = new UpdateOrderStatusRequest(OrderStatus.PAUSADO);
@@ -244,7 +245,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao excluir pedido inexistente")
+    @DisplayName("Deve lanÃƒÂ§ar exceÃƒÂ§ÃƒÂ£o ao excluir pedido inexistente")
     void shouldThrowWhenDeletingMissingOrder() {
         // Arrange
         when(orderRepository.findById(99L)).thenReturn(Optional.empty());
@@ -266,7 +267,7 @@ class OrderServiceTest {
         LocalDateTime now = LocalDateTime.of(2026, 7, 14, 10, 30);
 
         return new OrderResponse(
-                id, "Pedido Ramon Silva", 3, 1500, status, now, now
+                id, "Pedido Ramon Silva", 3, 1500, 4500, status, now, now
         );
     }
 }

@@ -54,4 +54,8 @@ public class OrderEntity {
         this.weight = weight;
         this.status = OrderStatus.EM_PROCESSAMENTO;
     }
+
+    public Integer getTotalWeight() {
+        return this.weight * this.items;
+    }
 }

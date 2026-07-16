@@ -22,6 +22,7 @@ public class OrderMapper {
                 entity.getDisplayName(),
                 entity.getItems(),
                 entity.getWeight(),
+                entity.getTotalWeight(),
                 entity.getStatus(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()

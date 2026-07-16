@@ -58,6 +58,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$[0].displayName").value("Pedido Ramon Silva"))
                 .andExpect(jsonPath("$[0].items").value(3))
                 .andExpect(jsonPath("$[0].weight").value(1500))
+                .andExpect(jsonPath("$[0].totalWeight").value(4500))
                 .andExpect(jsonPath("$[0].status").value("EM_PROCESSAMENTO"));
 
         verify(orderService).findAll();
@@ -83,13 +84,13 @@ class OrderControllerTest {
     @DisplayName("GET /api/pedidos/{id} deve retornar 404")
     void shouldReturnNotFound() throws Exception {
         // Arrange
-        when(orderService.findById(99L)).thenThrow(new ResourceNotFoundExecption("Pedido com ID 99 não encontrado"));
+        when(orderService.findById(99L)).thenThrow(new ResourceNotFoundExecption("Pedido com ID 99 nao encontrado"));
 
         // Act + Assert
         mockMvc.perform(get("/api/pedidos/{id}", 99L))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.message").value("Pedido com ID 99 não encontrado"));
+                .andExpect(jsonPath("$.message").value("Pedido com ID 99 nao encontrado"));
 
         verify(orderService).findById(99L);
     }
@@ -115,7 +116,7 @@ class OrderControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/pedidos deve retornar 400 para dados inválidos")
+    @DisplayName("POST /api/pedidos deve retornar 400 para dados invalidos")
     void shouldReturnBadRequestForInvalidRequest() throws Exception {
         // Arrange
         CreateOrderRequest request = new CreateOrderRequest("Ana", 0, -1);
@@ -139,7 +140,7 @@ class OrderControllerTest {
     void shouldReturnUnprocessableEntityWhenLimitIsReached() throws Exception {
         // Arrange
         CreateOrderRequest request = new CreateOrderRequest("Pedido Ramon Silva", 3, 1500);
-        when(orderService.create(request)).thenThrow(new BusinessExecption("O limite máximo de 5 pedidos foi atingido"));
+        when(orderService.create(request)).thenThrow(new BusinessExecption("O limite maximo de 5 pedidos foi atingido"));
 
         // Act + Assert
         mockMvc.perform(post("/api/pedidos")
@@ -147,7 +148,7 @@ class OrderControllerTest {
                                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.status").value(422))
-                .andExpect(jsonPath("$.message").value("O limite máximo de 5 pedidos foi atingido"));
+                .andExpect(jsonPath("$.message").value("O limite maximo de 5 pedidos foi atingido"));
 
         verify(orderService).create(request);
     }
@@ -172,13 +173,13 @@ class OrderControllerTest {
     }
 
     @Test
-    @DisplayName("PATCH deve retornar 422 para transição inválida")
+    @DisplayName("PATCH deve retornar 422 para transicao invalida")
     void shouldReturnUnprocessableEntityForInvalidTransition() throws Exception {
         // Arrange
         UpdateOrderStatusRequest request = new UpdateOrderStatusRequest(OrderStatus.PAUSADO);
 
         when(orderService.updateStatus(1L, request))
-                .thenThrow(new BusinessExecption("Não é permitido alterar o status de CANCELADO para PAUSADO"));
+                .thenThrow(new BusinessExecption("Nao e permitido alterar o status de CANCELADO para PAUSADO"));
 
         // Act + Assert
         mockMvc.perform(patch("/api/pedidos/{id}/status", 1L)
@@ -187,7 +188,7 @@ class OrderControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.message")
-                                .value("Não é permitido alterar o status de CANCELADO para PAUSADO"));
+                                .value("Nao e permitido alterar o status de CANCELADO para PAUSADO"));
 
         verify(orderService).updateStatus(1L, request);
     }
@@ -229,6 +230,6 @@ class OrderControllerTest {
 
     private OrderResponse createResponse(OrderStatus status) {
         LocalDateTime now = LocalDateTime.of(2026, 7, 14, 10, 30);
-        return new OrderResponse(1L, "Pedido Ramon Silva", 3, 1500, status, now, now);
+        return new OrderResponse(1L, "Pedido Ramon Silva", 3, 1500, 4500, status, now, now);
     }
 }

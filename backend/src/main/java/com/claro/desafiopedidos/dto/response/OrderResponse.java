@@ -10,6 +10,7 @@ public record OrderResponse(
         String displayName,
         Integer items,
         Integer weight,
+        Integer totalWeight,
         OrderStatus status,
         LocalDateTime createAt,
         LocalDateTime updateAt
