@@ -108,8 +108,10 @@
 
 .topbar-actions {
     align-items: center;
-    justify-content: flex-end;
-    flex-wrap: wrap
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    width: max-content;
+    margin-left: auto
 }
 
 .topbar .mat-mdc-outlined-button:not(:disabled) {
@@ -169,8 +171,19 @@ h1 {
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 900px
+    min-width: 980px;
+    table-layout: fixed
 }
+
+.client-column { width: 24% }
+
+.items-column { width: 8% }
+
+.weight-column { width: 10% }
+
+.status-column { width: 18% }
+
+.actions-column { width: 40% }
 
 th,
 td {
@@ -209,10 +222,27 @@ th {
     color: var(--danger)
 }
 
+td.actions-cell {
+    text-align: right
+}
+
+th.actions-cell {
+    text-align: right
+}
+
+.actions-heading {
+    display: inline-block;
+    width: 390px;
+    text-align: left
+}
+
 .action-group {
     display: flex;
+    justify-content: flex-start;
     gap: .45rem;
-    flex-wrap: wrap
+    flex-wrap: wrap;
+    width: max-content;
+    margin-left: auto
 }
 
 .loading-state,

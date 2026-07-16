@@ -92,13 +92,21 @@
       } @else {
         <div class="table-wrap">
           <table>
+            <colgroup>
+              <col class="client-column" />
+              <col class="items-column" />
+              <col class="weight-column" />
+              <col class="status-column" />
+              <col class="actions-column" />
+            </colgroup>
+
             <thead>
               <tr>
                 <th>Cliente</th>
                 <th>Itens</th>
                 <th>Peso</th>
                 <th>Status</th>
-                <th>Acoes</th>
+                <th class="actions-cell"><span class="actions-heading">Ações</span></th>
               </tr>
             </thead>
 
@@ -113,7 +121,7 @@
                       {{ statusLabel(order.status) }}
                     </span>
                   </td>
-                  <td>
+                  <td class="actions-cell">
                     <div class="action-group">
                       <button
                         mat-stroked-button
