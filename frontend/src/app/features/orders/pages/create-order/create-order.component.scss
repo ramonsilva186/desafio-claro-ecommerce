@@ -1,4 +1,4 @@
-﻿.order-page {
+.order-page {
     min-height: 100vh;
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr);
@@ -70,7 +70,7 @@
     border-radius: 8px;
     background: #fff;
     color: var(--claro-red);
-    font-weight: 900
+    font-size: 1.1rem
 }
 
 .order-main {
