@@ -73,7 +73,7 @@ export class DashboardComponent implements OnInit {
 
   get totalWeightInKg(): string {
     const totalInGrams = this.orders.reduce(
-      (total, order) => total + order.weight,
+      (total, order) => total + order.totalWeight,
       0
     );
 

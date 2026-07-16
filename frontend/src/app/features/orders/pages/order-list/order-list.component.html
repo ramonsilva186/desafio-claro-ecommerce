@@ -107,7 +107,7 @@
                 <tr>
                   <td>{{ order.displayName }}</td>
                   <td>{{ order.items }}</td>
-                  <td>{{ weightInKg(order.weight) }}</td>
+                  <td>{{ weightInKg(order.totalWeight) }}</td>
                   <td>
                     <span class="status-badge" [class]="'status-badge status-' + order.status">
                       {{ statusLabel(order.status) }}

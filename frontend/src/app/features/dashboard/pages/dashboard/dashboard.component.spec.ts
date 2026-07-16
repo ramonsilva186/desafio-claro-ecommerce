@@ -15,6 +15,7 @@ const ordersMock: Order[] = [
     displayName: 'Pedido #1 - Joao Silva',
     items: 2,
     weight: 1024,
+    totalWeight: 2048,
     status: 'EM_PROCESSAMENTO',
     createdAt: '2026-07-16T00:00:00',
     updatedAt: '2026-07-16T00:00:00'
@@ -24,6 +25,7 @@ const ordersMock: Order[] = [
     displayName: 'Pedido #2 - Maria Souza',
     items: 1,
     weight: 512,
+    totalWeight: 512,
     status: 'PAUSADO',
     createdAt: '2026-07-16T00:00:00',
     updatedAt: '2026-07-16T00:00:00'
@@ -33,6 +35,7 @@ const ordersMock: Order[] = [
     displayName: 'Pedido #3 - Carlos Lima',
     items: 4,
     weight: 2048,
+    totalWeight: 8192,
     status: 'CANCELADO',
     createdAt: '2026-07-16T00:00:00',
     updatedAt: '2026-07-16T00:00:00'
@@ -93,7 +96,7 @@ describe('DashboardComponent', () => {
     expect(component.pausedOrders).toBe(1);
     expect(component.canceledOrders).toBe(1);
     expect(component.totalItems).toBe(7);
-    expect(component.totalWeightInKg).toBe('3.58');
+    expect(component.totalWeightInKg).toBe('10.75');
     expect(component.remainingSlots).toBe(2);
     expect(component.usagePercent).toBe(60);
   });

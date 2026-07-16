@@ -34,6 +34,7 @@ describe('OrderService', () => {
         displayName: 'Pedido #1 - Joao Silva',
         items: 2,
         weight: 1024,
+        totalWeight: 2048,
         status: 'EM_PROCESSAMENTO',
         createdAt: '2026-07-16T00:00:00',
         updatedAt: '2026-07-16T00:00:00'
@@ -51,7 +52,7 @@ describe('OrderService', () => {
     const request = httpMock.expectOne(`${environment.apiUrl}/pedidos`);
     expect(request.request.method).toBe('POST');
     expect(request.request.body).toEqual(payload);
-    request.flush({ id: 4, ...payload, status: 'EM_PROCESSAMENTO' });
+    request.flush({ id: 4, ...payload, totalWeight: 1000, status: 'EM_PROCESSAMENTO' });
   });
 
   it('should update order status', () => {
