@@ -28,15 +28,20 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderResponse> findAll() {
-        return orderRepository.findAll()
+        List<OrderResponse> orders = orderRepository.findAll()
                 .stream()
                 .map(orderMapper::toResponse)
                 .toList();
+
+        log.info("event=orders_listed totalOrders={}", orders.size());
+        return orders;
     }
 
     @Transactional(readOnly = true)
     public OrderResponse findById(Long id) {
         OrderEntity order = findEntityById(id);
+
+        log.info("event=order_retrieved orderId={} status={}", order.getId(), order.getStatus());
         return orderMapper.toResponse(order);
     }
 
@@ -49,7 +54,7 @@ public class OrderService {
         formatDisplayNameWithOrderId(savedOrder);
 
         log.info(
-                "Pedido criado com sucesso: orderId={}, displayName={}, items={}, weight={}, status={}",
+                "event=order_created orderId={} displayName={} items={} weightGrams={} status={}",
                 savedOrder.getId(),
                 savedOrder.getDisplayName(),
                 savedOrder.getItems(),
@@ -67,7 +72,7 @@ public class OrderService {
 
         if (!currentStatus.canTransitionTo(nextStatus)) {
             log.warn(
-                    "Tentativa de transicao invalida: orderId={}, currentStatus={}, nextStatus={}",
+                    "event=order_status_transition_denied orderId={} currentStatus={} requestedStatus={}",
                     id,
                     currentStatus,
                     nextStatus
@@ -80,13 +85,12 @@ public class OrderService {
         OrderEntity updatedOrder = orderRepository.save(order);
 
         log.info(
-                "Status do pedido alterado com sucesso: orderId={}, previousStatus={}, currentStatus={}",
+                "event=order_status_updated orderId={} previousStatus={} currentStatus={}",
                 updatedOrder.getId(),
                 currentStatus,
                 updatedOrder.getStatus()
         );
         return orderMapper.toResponse(updatedOrder);
-
     }
 
     @Transactional
@@ -95,7 +99,7 @@ public class OrderService {
         orderRepository.delete(order);
 
         log.info(
-                "Pedido excluido com sucesso: orderId={}, displayName={}, status={}",
+                "event=order_deleted orderId={} displayName={} status={}",
                 order.getId(),
                 order.getDisplayName(),
                 order.getStatus()
@@ -114,7 +118,8 @@ public class OrderService {
         long totalOrders = orderRepository.count();
 
         if (totalOrders >= MAX_ORDERS) {
-            log.warn("Tentativa de cadastro bloqueada: totalOrders={}, maxOrders={}",
+            log.warn(
+                    "event=order_creation_blocked reason=max_orders_reached totalOrders={} maxOrders={}",
                     totalOrders,
                     MAX_ORDERS
             );
@@ -126,9 +131,8 @@ public class OrderService {
     private OrderEntity findEntityById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Pedido nao encontrado: orderId={}", id);
+                    log.warn("event=order_not_found orderId={}", id);
                     return new ResourceNotFoundExecption("Pedido com ID %d nao encontrado".formatted(id));
                 });
     }
-
 }

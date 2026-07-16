@@ -27,41 +27,44 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
         if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
         }
+
         String token = authorizationHeader.substring(BEARER_PREFIX.length());
 
         try {
             String email = jwtService.extractUsername(token);
-
             boolean userNotAuthenticated = SecurityContextHolder.getContext().getAuthentication() == null;
 
             if (email != null && userNotAuthenticated) {
-                UserDetails userDetails =
-                        userDetailsService.loadUserByUsername(email);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
                 if (jwtService.isTokenValid(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails,
                             null,
-                            userDetails.getAuthorities());
+                            userDetails.getAuthorities()
+                    );
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         } catch (JwtException | IllegalArgumentException exception) {
             log.warn(
-                    "Token JWT inválido: path={}, reason={}",
+                    "event=jwt_invalid path={} reason={}",
                     request.getRequestURI(),
                     exception.getClass().getSimpleName()
             );
 
             SecurityContextHolder.clearContext();
         }
+
         filterChain.doFilter(request, response);
     }
 }

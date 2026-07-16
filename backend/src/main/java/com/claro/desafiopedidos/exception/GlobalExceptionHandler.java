@@ -23,9 +23,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundExecption.class)
     public ResponseEntity<ApiErrorResponse> handleResourceNotFound(ResourceNotFoundExecption exception, HttpServletRequest request) {
         log.warn(
-                "Recurso não encontrado: method={}, path={}, message={}",
+                "event=resource_not_found method={} path={} status={} message={}",
                 request.getMethod(),
                 request.getRequestURI(),
+                HttpStatus.NOT_FOUND.value(),
                 exception.getMessage()
         );
 
@@ -40,9 +41,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessExecption.class)
     public ResponseEntity<ApiErrorResponse> handleBusinessException(BusinessExecption exception, HttpServletRequest request) {
         log.warn(
-                "Regra de negócio violada: method={}, path={}, message={}",
+                "event=business_rule_violation method={} path={} status={} message={}",
                 request.getMethod(),
                 request.getRequestURI(),
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 exception.getMessage()
         );
 
@@ -57,9 +59,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedExecption.class)
     public ResponseEntity<ApiErrorResponse> handleUnauthorizedException(UnauthorizedExecption exception, HttpServletRequest request) {
         log.warn(
-                "Tentativa de acesso não autorizado: method={}, path={}",
+                "event=unauthorized_access method={} path={} status={}",
                 request.getMethod(),
-                request.getRequestURI()
+                request.getRequestURI(),
+                HttpStatus.UNAUTHORIZED.value()
         );
 
         return buildResponse(
@@ -84,9 +87,10 @@ public class GlobalExceptionHandler {
                 ));
 
         log.warn(
-                "Falha de validação: method={}, path={}, fields={}",
+                "event=request_validation_failed method={} path={} status={} fields={}",
                 request.getMethod(),
                 request.getRequestURI(),
+                HttpStatus.BAD_REQUEST.value(),
                 fieldErrors.keySet()
         );
 
@@ -101,9 +105,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiErrorResponse> handleMessageNotReadable(HttpMessageNotReadableException exception, HttpServletRequest request) {
         log.warn(
-                "Corpo da requisição inválido: method={}, path={}",
+                "event=request_body_invalid method={} path={} status={} reason={}",
                 request.getMethod(),
-                request.getRequestURI()
+                request.getRequestURI(),
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getClass().getSimpleName()
         );
 
         return buildResponse(
@@ -117,9 +123,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleUnexpectedException(Exception exception, HttpServletRequest request) {
         log.error(
-                "Erro inesperado: method={}, path={}",
+                "event=unexpected_error method={} path={} status={} reason={}",
                 request.getMethod(),
                 request.getRequestURI(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                exception.getClass().getSimpleName(),
                 exception
         );
 
