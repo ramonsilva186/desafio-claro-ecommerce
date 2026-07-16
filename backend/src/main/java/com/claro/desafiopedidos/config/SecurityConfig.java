@@ -52,7 +52,8 @@ public class SecurityConfig {
                                 "/h2-console/**",
                                 "/actuator/health",
                                 "/actuator/metrics",
-                                "/actuator/info"
+                                "/actuator/info",
+                                "/actuator/prometheus"
                         ).permitAll()
                         .requestMatchers("/api/pedidos/**")
                         .authenticated()
