@@ -1,0 +1,154 @@
+<main class="order-page">
+  <aside class="sidebar" aria-label="Navegacao principal">
+    <a class="sidebar-brand" routerLink="/dashboard" aria-label="Ir para o dashboard">
+      <img src="assets/claro.png" alt="Claro" class="brand-logo" />
+    </a>
+
+    <nav class="sidebar-nav">
+      <a class="nav-button" routerLink="/dashboard">
+        <span class="material-icons nav-icon" aria-hidden="true">dashboard</span>
+        Dashboard
+      </a>
+
+      <a class="nav-button nav-button--active" routerLink="/pedidos/novo">
+        <span class="material-icons nav-icon" aria-hidden="true">add_circle</span>
+        Criar pedido
+      </a>
+
+      <a class="nav-button" routerLink="/pedidos">
+        <span class="material-icons nav-icon" aria-hidden="true">assignment</span>
+        Meus Pedidos
+      </a>
+    </nav>
+  </aside>
+
+  <section class="order-main">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Cadastro</p>
+        <h1>Novo pedido</h1>
+        <p class="subtitle">
+          Cadastre novos pedidos.
+        </p>
+      </div>
+
+      <div class="topbar-actions">
+        <span class="limit-pill">
+          {{ totalOrders }}/{{ orderLimit }} pedidos
+        </span>
+
+        <button mat-stroked-button type="button" routerLink="/dashboard">
+          Voltar
+        </button>
+
+        <button mat-flat-button color="primary" type="button" (click)="logout()">
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <section class="content-grid">
+      <mat-card class="form-panel">
+        <div class="panel-heading">
+          <h2>Dados do pedido</h2>
+        </div>
+
+        @if (isLoading) {
+          <section class="loading-state" aria-live="polite">
+            <mat-spinner diameter="32"></mat-spinner>
+          </section>
+        } @else {
+
+          @if (isLimitReached) {
+            <p class="error-message">
+              O limite de 5 pedidos foi atingido. O cadastro esta bloqueado.
+            </p>
+          }
+
+          @if (errorMessage) {
+            <p class="error-message">{{ errorMessage }}</p>
+          }
+
+          <form class="order-form" [formGroup]="orderForm" (ngSubmit)="submit()">
+            <mat-form-field appearance="outline">
+              <mat-label>Cliente</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="displayName"
+                autocomplete="off"
+              />
+
+              @if (displayNameControl.hasError('required')) {
+                <mat-error>O nome do cliente e obrigatorio.</mat-error>
+              }
+
+              @if (displayNameControl.hasError('minlength')) {
+                <mat-error>O nome do cliente deve ter no minimo 5 caracteres.</mat-error>
+              }
+            </mat-form-field>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Peso em gramas</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  min="1"
+                  formControlName="weight"
+                />
+
+                @if (weightControl.hasError('required')) {
+                  <mat-error>O peso e obrigatorio.</mat-error>
+                }
+
+                @if (weightControl.hasError('min')) {
+                  <mat-error>O peso deve ser maior que 0.</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Itens</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  min="1"
+                  step="1"
+                  formControlName="items"
+                />
+
+                @if (itemsControl.hasError('required')) {
+                  <mat-error>A quantidade de itens e obrigatoria.</mat-error>
+                }
+
+                @if (itemsControl.hasError('min') || itemsControl.hasError('pattern')) {
+                  <mat-error>Informe apenas inteiros maiores que 0.</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="orderForm.invalid || isSubmitting || isLimitReached || apiUnavailable"
+            >
+              @if (isSubmitting) {
+                <mat-spinner diameter="22"></mat-spinner>
+              } @else {
+                Cadastrar pedido
+              }
+            </button>
+          </form>
+        }
+      </mat-card>
+
+      <mat-card class="rules-panel">
+        <div class="remaining-box">
+          <span>Vagas restantes</span>
+          <strong>{{ remainingSlots }}</strong>
+        </div>
+      </mat-card>
+    </section>
+  </section>
+</main>
