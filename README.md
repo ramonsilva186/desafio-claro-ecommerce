@@ -2,6 +2,12 @@
 
 Aplicacao full stack para gestao de pedidos de e-commerce, desenvolvida com backend Java/Spring Boot e frontend Angular. O projeto tambem possui observabilidade com Spring Boot Actuator, Micrometer, Prometheus e Grafana.
 
+## Visao Arquitetural
+
+![System Design - Gestao de Pedidos Claro](docs/assets/system-design.png)
+
+O desenho acima resume o fluxo principal do sistema. O usuario acessa o frontend Angular servido por Nginx, realiza login e recebe um token JWT. A partir disso, o frontend envia requisicoes autenticadas para a API Spring Boot, que organiza a regra de negocio nas camadas de controller, service, mapper e repository. Os dados sao persistidos em banco H2 em memoria, adequado para o desafio tecnico. Em paralelo, o backend expoe endpoints do Actuator para saude e metricas; o Prometheus coleta essas metricas a cada 15 segundos e o Grafana exibe os dashboards provisionados. A API tambem gera logs estruturados para acompanhar eventos importantes da aplicacao.
+
 ## Tecnologias
 
 - Java 25
